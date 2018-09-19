@@ -1,5 +1,7 @@
 numpy
 pandas
+pandas_datareader
 matplotlib
 scikit-learn
 keras
+tensorflow
