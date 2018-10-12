@@ -7,3 +7,5 @@ keras
 tensorflow
 int_date
 requests
+unidecode
+simplejson
