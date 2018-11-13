@@ -53,9 +53,9 @@ def check_ANY_list_in_title(list,string ):
 
 
 
-def search_mla_return_list(product,min_price,max_price):
+def search_mla_return_list(product,min_price,max_price,category):
     #print ("Returning complete MLA list for product",product)
-    link = 'https://api.mercadolibre.com/sites/MLA/search?q=\'' + product + '\'' 
+    link = 'https://api.mercadolibre.com/sites/MLA/search?q=\'' + product + '\'' + '&category=' + category
     price_filter = "&price=" + str(min_price) + "-" + str(max_price)
     link2 = link + '&offset=' + str(0) + '&limit=' + str(50) + price_filter
     r = requests.get(link2)
@@ -154,14 +154,14 @@ def return_products_from_list_pandas(total_c,product,condition,min_price,max_pri
         df_temp['title'] = df['title'].str.lower()
     return df_temp
 
-def display_product(product,min_price_list,max_price_list,sell_condition,percentage_max_sell,other_locations,total):
+def display_product(product,min_price_list,max_price_list,sell_condition,percentage_max_sell,category,total):
     num = 0
     df_temp = ''
     df_temp = pd.DataFrame.from_dict([])
     for price in min_price_list:
         min_price = min_price_list[num]
         max_price = max_price_list[num]
-        mla_list = search_mla_return_list(product,min_price,max_price)
+        mla_list = search_mla_return_list(product,min_price,max_price,category)
         ranger = '$' + str(min_price) + '-$' + str(max_price)
         df = return_products_from_list_pandas(mla_list,product,sell_condition,min_price,max_price)
 
