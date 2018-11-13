@@ -64,6 +64,7 @@ def search_mla_return_list(product,min_price,max_price):
     #print (c['results'][0])
     c_orig = c
     c_partial = c['results']
+    #print (c_partial)
     start =  c['paging']['offset']
     end =  c['paging']['limit']
     total =  c['paging']['total'] 
@@ -79,6 +80,7 @@ def search_mla_return_list(product,min_price,max_price):
     num_new = 0
     while ( total > 51 and end > 10 ): # and 0):  ## <--- full list instead of first 50
         start = start + end
+        print (start,"..",end='')
         if ( (c['paging']['total'] - start) < end  ):
             end = c['paging']['total'] - 1 - start 
         link2 = link + '&offset=' + str(start) + '&limit=' + str(end) + price_filter
@@ -142,8 +144,10 @@ def return_products_from_list_pandas(total_c,product,condition,min_price,max_pri
     df = pd.DataFrame.from_dict(total_c)
     if (len(df)>0):
         df_resu = pd.DataFrame()
-        df_temp = df.loc[:, ['title', 'price','sold_quantity','address','thumbnail','permalink']].sort_values('sold_quantity',ascending=False)
+        df_temp = df.loc[:, ['title', 'price','sold_quantity','address','thumbnail','permalink','shipping','seller']].sort_values('sold_quantity',ascending=False)
         df_temp['city'] = df_temp['address'].apply(lambda x: x.get('city_name'))
+        df_temp['seller_id'] = df_temp['seller'].apply(lambda x: x.get('id'))
+        df_temp['free_shipping'] = df_temp['shipping'].apply(lambda x: x.get('free_shipping'))
         df_temp['state'] = df_temp['address'].apply(lambda x: x.get('state_name'))
 
         df_temp['total'] = df['price'] * df['sold_quantity']
@@ -168,7 +172,7 @@ def display_product(product,min_price_list,max_price_list,sell_condition,percent
                 df_temp = df_temp.append(df_value, ignore_index=True)
                    # df_final = df_final.to_html('df_final.html')
         if ( len(df_temp)>0):        
-            display(HTML(df_temp.loc[:, ['title', 'price','sold_quantity','total','state','city','thumbnail','permalink']].sort_values('total',ascending=False).to_html(border=1, escape=False ,formatters=dict(thumbnail=path_to_image_html,permalink=path_to_link_html))))
+            display(HTML(df_temp.loc[:, ['title', 'price','sold_quantity','total','state','city','thumbnail','permalink','seller_id','free_shipping']].sort_values('total',ascending=False).to_html(border=1, escape=False ,formatters=dict(thumbnail=path_to_image_html,permalink=path_to_link_html))))
             #display(HTML(df_temp.to_html(border=1, escape=False ,formatters=dict(thumbnail=path_to_image_html,permalink=path_to_link_html))))
         num = num + 1
     return df_temp
