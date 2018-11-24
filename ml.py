@@ -143,7 +143,7 @@ def return_products_from_list_pandas(total_c,product,condition,min_price,max_pri
     product_list = product.split()
     df = pd.DataFrame.from_dict(total_c)
     if (len(df)>0):
-        df_resu = pd.DataFrame()
+        df_temp = pd.DataFrame()
         df_temp = df.loc[:, ['title', 'price','sold_quantity','address','thumbnail','permalink','shipping','seller']].sort_values('sold_quantity',ascending=False)
         df_temp['city'] = df_temp['address'].apply(lambda x: x.get('city_name'))
         df_temp['seller_id'] = df_temp['seller'].apply(lambda x: x.get('id'))
@@ -152,7 +152,8 @@ def return_products_from_list_pandas(total_c,product,condition,min_price,max_pri
 
         df_temp['total'] = df['price'] * df['sold_quantity']
         df_temp['title'] = df['title'].str.lower()
-    return df_temp
+        return df_temp
+    return ''
 
 def display_product(product,min_price_list,max_price_list,sell_condition,percentage_max_sell,category,total):
     num = 0
