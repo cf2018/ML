@@ -71,7 +71,7 @@ def search_mla_return_list(product,min_price,max_price,category):
     total_saved = total
     total_c = c['results']
     maximum_sell = 0
-    print ("Total found:",total," (limited to 1k no token) start:",start," end ",end," , range: ",min_price,"-",max_price)
+    #print ("Total found:",total," (limited to 1k no token) start:",start," end ",end," , range: ",min_price,"-",max_price)
     if total > 1000:
         total = 1000
     # TEMOPORARY
@@ -80,7 +80,7 @@ def search_mla_return_list(product,min_price,max_price,category):
     num_new = 0
     while ( total > 51 and end > 10 ): # and 0):  ## <--- full list instead of first 50
         start = start + end
-        print (start,"..",end='')
+        #print (start,"..",end='')
         if ( (c['paging']['total'] - start) < end  ):
             end = c['paging']['total'] - 1 - start 
         link2 = link + '&offset=' + str(start) + '&limit=' + str(end) + price_filter
@@ -168,12 +168,13 @@ def display_product(product,min_price_list,max_price_list,sell_condition,percent
 
         for num2 in range(0,len(df)):
             df_value = df.iloc[num2]
-            if ( int(df_value['total']) > total ):
+            if ( float(df_value['total']) > total ):
                 #print (df_value)
                 df_temp = df_temp.append(df_value, ignore_index=True)
                    # df_final = df_final.to_html('df_final.html')
         if ( len(df_temp)>0):        
-            display(HTML(df_temp.loc[:, ['title', 'price','sold_quantity','total','state','city','thumbnail','permalink','seller_id','free_shipping']].sort_values('total',ascending=False).to_html(border=1, escape=False ,formatters=dict(thumbnail=path_to_image_html,permalink=path_to_link_html))))
+            #display(HTML(df_temp.loc[:, ['title', 'price','sold_quantity','total','state','city','thumbnail','permalink','seller_id','free_shipping']].sort_values('total',ascending=False).to_html(border=1, escape=False ,formatters=dict(thumbnail=path_to_image_html,permalink=path_to_link_html))))
+            a=1
             #display(HTML(df_temp.to_html(border=1, escape=False ,formatters=dict(thumbnail=path_to_image_html,permalink=path_to_link_html))))
         num = num + 1
     return df_temp
