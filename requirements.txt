@@ -9,3 +9,4 @@ int_date
 requests
 unidecode
 simplejson
+beautifulsoup4
