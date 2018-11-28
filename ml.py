@@ -9,6 +9,16 @@ import pandas as pd
 from collections import OrderedDict
 from datetime import date
 import random
+from bs4 import *
+
+def retrieve_sold_from_link(link):
+    r = requests.get(link)
+    soup = BeautifulSoup(r.text)
+    text_soup = soup.prettify()
+    split_text = text_soup.split('\n')
+    for num in range(0,len(split_text)):
+        if ( 'vendidos' in split_text[num]):
+            return int(split_text[num - 1])
 
 def path_to_image_html(path):
     '''
