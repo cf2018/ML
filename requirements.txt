@@ -1,5 +1,6 @@
 numpy<=1.14.5,>1.13.3
 pandas
+numpy
 pandas_datareader
 matplotlib
 scikit-learn
