@@ -10,5 +10,5 @@ requests
 unidecode
 simplejson
 beautifulsoup4
-seaborn
-multiprocessing
+#seaborn
+#multiprocessing
