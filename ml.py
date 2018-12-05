@@ -19,6 +19,13 @@ def retrieve_sold_from_link(link):
     for num in range(0,len(split_text)):
         if ( '\tvendidos' in split_text[num]):
             return int(split_text[num - 1])
+ def retrieve_sold_from_text(text):
+    soup = BeautifulSoup(text)
+    text_soup = soup.prettify()
+    split_text = text_soup.split('\n')
+    for num in range(0,len(split_text)):
+        if ( '\tvendidos' in split_text[num]):
+            return int(split_text[num - 1])
 
 def path_to_image_html(path):
     '''
