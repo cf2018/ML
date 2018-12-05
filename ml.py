@@ -19,7 +19,7 @@ def retrieve_sold_from_link(link):
     for num in range(0,len(split_text)):
         if ( '\tvendidos' in split_text[num]):
             return int(split_text[num - 1])
- def retrieve_sold_from_text(text):
+def retrieve_sold_from_text(text):
     soup = BeautifulSoup(text)
     text_soup = soup.prettify()
     split_text = text_soup.split('\n')
