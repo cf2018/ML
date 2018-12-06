@@ -10,6 +10,35 @@ from collections import OrderedDict
 from datetime import date
 import random
 from bs4 import *
+import http.client, sys
+#from Queue import Queue
+from multiprocessing import Queue
+# Example 3: asynchronous requests with larger thread pool
+import asyncio
+import concurrent.futures
+
+async def fix_sold(range_start,range_end):
+
+    with concurrent.futures.ThreadPoolExecutor(max_workers=20) as executor:
+
+        loop = asyncio.get_event_loop()
+        futures = [
+            loop.run_in_executor
+            (
+                executor, 
+                requests.get, 
+                df['permalink'].iloc[i],
+                print ("sent ",i," ",df['permalink'].iloc[i])
+            )
+            for i in range(range_start,range_end)
+        ]
+        for response in await asyncio.gather(*futures):
+            sold = retrieve_sold_from_text(response.text)
+            print ("returned sold ",sold," from ",response.url)
+            for index, row in df[range_start:range_end].iterrows():
+                if str(df.loc[index,'permalink']) in response.url:
+                    print (df.loc[index,'title'])
+                    df.loc[index,'sold_new'] = sold
 
 def retrieve_sold_from_link(link):
     r = requests.get(link)
