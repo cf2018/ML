@@ -1,3 +1,4 @@
+pymongo[srv]
 numpy<=1.14.5,>1.13.3
 pandas
 pandas_datareader
@@ -13,4 +14,4 @@ beautifulsoup4
 #seaborn
 #multiprocessing
 pymongo
-pymongo[srv]
+
