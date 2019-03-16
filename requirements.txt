@@ -12,4 +12,5 @@ simplejson
 beautifulsoup4
 #seaborn
 #multiprocessing
-
+pymongo
+pymongo[srv]
