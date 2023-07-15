@@ -201,7 +201,7 @@ def return_products_from_list_pandas(total_c,product,condition,min_price,max_pri
         return df_temp
     return ''
 
-def display_product(product,min_price_list,max_price_list,sell_condition,percentage_max_sell,category,total):
+def display_product_old(product,min_price_list,max_price_list,sell_condition,percentage_max_sell,category,total):
     num = 0
     df_temp = ''
     df_temp = pd.DataFrame.from_dict([])
@@ -215,15 +215,35 @@ def display_product(product,min_price_list,max_price_list,sell_condition,percent
         for num2 in range(0,len(df)):
             df_value = df.iloc[num2]
             if ( float(df_value['total']) > total ):
-                #print (df_value)
                 df_temp = df_temp.append(df_value, ignore_index=True)
-                   # df_final = df_final.to_html('df_final.html')
         if ( len(df_temp)>0):        
-            #display(HTML(df_temp.loc[:, ['title', 'price','sold_quantity','total','state','city','thumbnail','permalink','seller_id','free_shipping']].sort_values('total',ascending=False).to_html(border=1, escape=False ,formatters=dict(thumbnail=path_to_image_html,permalink=path_to_link_html))))
-            a=1
-            #display(HTML(df_temp.to_html(border=1, escape=False ,formatters=dict(thumbnail=path_to_image_html,permalink=path_to_link_html))))
+             a=1
         num = num + 1
     return df_temp
+
+def display_product(product, min_price_list, max_price_list, sell_condition, percentage_max_sell, category, total):
+    df_temp = pd.DataFrame()
+
+    for min_price, max_price in zip(min_price_list, max_price_list):
+        mla_list = search_mla_return_list(product, min_price, max_price, category)
+        ranger = '$' + str(min_price) + '-$' + str(max_price)
+        df = return_products_from_list_pandas(mla_list, product, sell_condition, min_price, max_price)
+        
+        try:
+            df['total'] = pd.to_numeric(df['total'], errors='coerce')
+
+            mask = df['total'] > total
+            df_filtered = df[mask]
+            
+            if not df_filtered.empty:
+                if df.empty:
+                    df = df_filtered.copy()
+                else:
+                    df = pd.concat([df_temp, df_filtered])
+        except:
+            pass
+    
+    return df
         
 
 def return_products_from_list_in_locations_pandas(total_c,product,sell_condition,locations,min_sell,min_price,max_price):
@@ -232,7 +252,7 @@ def return_products_from_list_in_locations_pandas(total_c,product,sell_condition
     #sorted(total_c, key=operator.itemgetter(16) )
     df = pd.DataFrame.from_dict(total_c)
     df_resu = pd.DataFrame()
-    df_temp = df.loc[:, ['title', 'price','sold_quantity','address','thumbnail','permalink']].sort_values('sold_quantity',ascending=False)
+    df_temp = df.loc[:, ['total','title', 'price','sold_quantity','address','thumbnail','permalink']].sort_values('sold_quantity',ascending=False)
     df_temp['city'] = df_temp['address'].apply(lambda x: x.get('city_name'))
     df_temp['state'] = df_temp['address'].apply(lambda x: x.get('state_name'))
     df_temp2['title'] = df_temp2['title'].str.lower()
@@ -240,6 +260,6 @@ def return_products_from_list_in_locations_pandas(total_c,product,sell_condition
    
     for palabra in product.split(' '):
         df_temp2 = df_temp2[ df_temp2['title'].str.contains(palabra)]
-        df_resu = df_resu.append(df_temp2)
+        df_resu = df_resu.concat([df_resu,df_temp2])
     df_temp2 = df_resu[ df_resu['city'].str.contains(locations)]
     return df_temp2
